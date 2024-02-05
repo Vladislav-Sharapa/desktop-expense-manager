@@ -35,8 +35,8 @@ class ExpenseRepository(BaseRepository[Expense]):
         super().__init__(Expense, session)
 
     def get_total(self) -> float:
-        total_amount = self.session.query(Expense).with_entities(Expense.amount).all()
-        return sum(price for price in total_amount)
+        '''Get total sum of amount column in `expenses` table'''
+        return self.session.query(func.sum(self.model.amount)).scalar()
 
 
 class ExpenseCategoryRepository(BaseRepository[ExpenseCategory]):

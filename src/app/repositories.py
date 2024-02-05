@@ -1,5 +1,5 @@
 from typing import TypeVar, Generic
-from sqlalchemy import func
+from sqlalchemy import func, select
 from sqlalchemy.orm import Session
 from .models import *
 
@@ -38,7 +38,17 @@ class ExpenseRepository(BaseRepository[Expense]):
         '''Get total sum of amount column in `expenses` table'''
         return self.session.query(func.sum(self.model.amount)).scalar()
 
-
+    def get_all(self):
+        query = (
+            select(Expense.id,
+                   Expense.title,
+                   Expense.created_at,
+                   Expense.amount,
+                   ExpenseCategory.title.label('cat')
+                ).select_from() .join(ExpenseCategory, Expense.category_id == ExpenseCategory.id)
+        )
+        return self.session.execute(query).all()
+    
 class ExpenseCategoryRepository(BaseRepository[ExpenseCategory]):
     """Repository to interect with `expanses category` table in database"""
     def __init__(self, session: Session) -> None:

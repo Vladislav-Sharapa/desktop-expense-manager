@@ -1,7 +1,7 @@
 import datetime
 from database.session import engine
 from sqlalchemy import String, text, ForeignKey
-from sqlalchemy.orm import Mapped, mapped_column, DeclarativeBase
+from sqlalchemy.orm import Mapped, mapped_column, DeclarativeBase, relationship
 
 
 class Base(DeclarativeBase):
@@ -13,6 +13,7 @@ class ExpenseCategory(Base):
     __tablename__ = "expense_categories"
     
     title: Mapped[str]
+    expenses: Mapped["Expense"] = relationship("Expense", back_populates="category")
 
 
 class Expense(Base):
@@ -23,7 +24,7 @@ class Expense(Base):
     amount: Mapped[float]
 
     category_id: Mapped[int] = mapped_column(ForeignKey('expense_categories.id', ondelete='CASCADE'))
-
+    category: Mapped["ExpenseCategory"] = relationship("ExpenseCategory", back_populates="expenses")
 
 if __name__ == '__main__':
     Base.metadata.drop_all(engine)

@@ -48,12 +48,13 @@ class ExpenseRepository(BaseRepository[Expense]):
 
     def get_all(self):
         query = (
-            select(Expense.id,
-                   Expense.title,
-                   Expense.created_at,
-                   Expense.amount,
+            select(self.model.id,
+                   self.model.title,
+                   self.model.created_at,
+                   self.model.amount,
+                   self.model.category_id,
                    ExpenseCategory.title.label('cat')
-                ).select_from() .join(ExpenseCategory, Expense.category_id == ExpenseCategory.id)
+                ).select_from(self.model).join(ExpenseCategory, self.model.category_id == ExpenseCategory.id)
         )
         return self.session.execute(query).all()
     
@@ -61,3 +62,10 @@ class ExpenseCategoryRepository(BaseRepository[ExpenseCategory]):
     """Repository to interect with `expanses category` table in database"""
     def __init__(self, session: Session) -> None:
         super().__init__(ExpenseCategory, session)
+
+    def get_all(self):
+        query = (
+            select(self.model.id,
+                   self.model.title).select_from(self.model)
+        )
+        return self.session.execute(query).all()

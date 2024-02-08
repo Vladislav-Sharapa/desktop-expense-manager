@@ -24,9 +24,17 @@ class BaseRepository(Generic[Model]):
             return True
         return False
     
+    def update(self, id: int, data:dict):
+        instanse = self.session.query(self.model).filter(self.model.id == id)
+        if instanse: 
+            instanse.update(data)
+    
     def __get_by_id(self, id: int) -> Model:
-        instance = self.session.query(self.model).filter(self.model.id == id).first()
+        instance = self.session.query(self.model).get(id)
         return instance
+    
+    def get_all(self):
+        pass
     
 
 class ExpenseRepository(BaseRepository[Expense]):

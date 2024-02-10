@@ -13,7 +13,7 @@ class ExpenseCategory(Base):
     __tablename__ = "expense_categories"
     
     title: Mapped[str]
-    expenses: Mapped["Expense"] = relationship("Expense", back_populates="category")
+    expenses: Mapped["Expense"] = relationship("Expense", back_populates="category", cascade='all, delete')
 
 
 class Expense(Base):
@@ -30,4 +30,3 @@ if __name__ == '__main__':
     Base.metadata.drop_all(engine)
     Base.metadata.create_all(engine)
     engine.echo = True
-    print('good')

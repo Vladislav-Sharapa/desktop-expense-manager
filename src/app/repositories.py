@@ -1,7 +1,7 @@
 from typing import TypeVar, Generic
 from sqlalchemy import func, select
 from sqlalchemy.orm import Session
-from .models import *
+from .models import Base, Expense, ExpenseCategory
 
 Model = TypeVar("Model", bound=Base)
 
